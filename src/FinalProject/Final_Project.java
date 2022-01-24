@@ -216,6 +216,7 @@ public class Final_Project implements Runnable, ActionListener {
             case "clearbutton":
                 expression = "";
                 break;
+
             case "expbutton":
                 expression = expression + " ^ ";
                 break;
