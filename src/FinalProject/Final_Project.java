@@ -216,12 +216,11 @@ public class Final_Project implements Runnable, ActionListener {
             case "clearbutton":
                 expression = "";
                 break;
-
             case "expbutton":
                 expression = expression + " ^ ";
                 break;
             case "backbutton":
-
+                // spaces need to be deleted as well, which are before and after operations
                 //if statement to make sure there is something in the expression
                 if (expression.length() > 0) {
                     // delete the last character
@@ -339,8 +338,6 @@ public class Final_Project implements Runnable, ActionListener {
                         // update string array
                         nums = expression.split(" ");
 
-                        System.out.println(expression);
-
                     }
                     Checkexp = expCheck(nums);
                 }
@@ -376,8 +373,6 @@ public class Final_Project implements Runnable, ActionListener {
                         // update string array
                         nums = expression.split(" ");
 
-                        System.out.println(expression);
-
                     } else if ("/".equals(nums[j])) {
                         // do the operation and make i-1 
                         nums[j - 1] = Double.toString(Double.parseDouble(""
@@ -398,8 +393,6 @@ public class Final_Project implements Runnable, ActionListener {
 
                         // update string array
                         nums = expression.split(" ");
-
-                        System.out.println(expression);
 
                     }
                     // check if there is division or multipication left
@@ -429,8 +422,6 @@ public class Final_Project implements Runnable, ActionListener {
                     // update string array
                     nums = expression.split(" ");
 
-                    System.out.println(expression);
-
                 }
 
                 if (nums.length
@@ -454,8 +445,6 @@ public class Final_Project implements Runnable, ActionListener {
 
                     // update string array
                     nums = expression.split(" ");
-
-                    System.out.println(expression);
 
                 }
             }
