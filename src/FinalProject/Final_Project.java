@@ -39,9 +39,11 @@ public class Final_Project implements Runnable, ActionListener {
     JButton openbracbutton = new JButton("(");
     JButton closebracbutton = new JButton(")");
     JButton equalbutton = new JButton("=");
+    JButton expbutton = new JButton(" ^ ");
 
     //extra buttons
-    JButton clearbutton = new JButton("CLEAR");
+    JButton clearbutton = new JButton("C");
+    JButton backbutton = new JButton("D");
 
     // Method to assemble our GUI
     public void run() {
@@ -138,25 +140,25 @@ public class Final_Project implements Runnable, ActionListener {
         decbutton.addActionListener(this);
         decbutton.setActionCommand("decbutton");
 
-        /*
-        openbracbutton.setBounds(200, 200, 50, 50);
-        mainpanel.add(openbracbutton);
-        openbracbutton.addActionListener(this);
-        openbracbutton.setActionCommand("openbracbutton");
-        closebracbutton.setBounds(250, 200, 50, 50);
-        mainpanel.add(closebracbutton);
-        closebracbutton.addActionListener(this);
-        closebracbutton.setActionCommand("closebracbutton");
-         */
-        clearbutton.setBounds(200, 200, 100, 50);
+        clearbutton.setBounds(200, 200, 50, 50);
         mainpanel.add(clearbutton);
         clearbutton.addActionListener(this);
         clearbutton.setActionCommand("clearbutton");
 
-        equalbutton.setBounds(150, 350, 150, 50);
+        equalbutton.setBounds(150, 350, 100, 50);
         mainpanel.add(equalbutton);
         equalbutton.addActionListener(this);
         equalbutton.setActionCommand("equalbutton");
+
+        expbutton.setBounds(250, 350, 50, 50);
+        mainpanel.add(expbutton);
+        expbutton.addActionListener(this);
+        expbutton.setActionCommand("expbutton");
+
+        backbutton.setBounds(250, 200, 50, 50);
+        mainpanel.add(backbutton);
+        backbutton.addActionListener(this);
+        backbutton.setActionCommand("backbutton");
     }
 
     // method called when a button is pressed
@@ -214,11 +216,16 @@ public class Final_Project implements Runnable, ActionListener {
             case "clearbutton":
                 expression = "";
                 break;
-            case "openbracbutton":
-                expression = expression + "(";
+            case "expbutton":
+                expression = expression + " ^ ";
                 break;
-            case "closebracbutton":
-                expression = expression + ")";
+            case "backbutton":
+
+                //if statement to make sure there is something in the expression
+                if (expression.length() > 0) {
+                    // delete the last character
+                    expression = expression.substring(0, expression.length() - 1);
+                }
                 break;
             default:
                 break;
@@ -265,6 +272,20 @@ public class Final_Project implements Runnable, ActionListener {
                 check = true;
                 break;
             }
+        }
+        return check;
+    }
+
+    // check if the string array still has multipication or division
+    public static boolean expCheck(String[] nums) {
+
+        boolean check = false;
+
+        for (int i = 0; i < nums.length; i++) {
+            if ("^".equals(nums[i])) {
+                check = true;
+                break;
+            }
 
         }
         return check;
@@ -275,15 +296,57 @@ public class Final_Project implements Runnable, ActionListener {
 
         String[] nums = expression.split(" ");
 
-        // variable to check for multipication/division
+        // variable to check for multipication/division or exponents
         boolean Checkmuldiv = false;
+
+        boolean Checkexp = false;
 
         // until there is only 1 number left, aka until the expression is solved
         while (nums.length != 1) {
 
+            Checkexp = expCheck(nums);
             // check to see if there is multipication or division in the expression
-            Checkmuldiv = muldivCheck(nums);
+            while (Checkexp != false) {
 
+                for (int j = 0; j < nums.length; j++) {
+
+                    // in the expression, and solve if there is
+                    // if it is either operation, do the operation and then make 
+                    // i-1 into the answer
+                    if ("^".equals(nums[j])) {
+
+                        // do the operation and make i-1 
+                        Double base = Double.parseDouble("" + nums[j - 1]);
+                        Double power = Double.parseDouble("" + nums[j + 1]);
+
+                        nums[j - 1] = Double.toString(Math.pow(base, power));
+
+                        System.out.println(nums[j - 1]);
+                        // remove the parts of the expression already operated
+                        nums[j] = "";
+                        nums[j + 1] = "";
+
+                        // update the expression string to match new expression
+                        expression = Arrays.toString(nums);
+
+                        // remove opening and closing brackets from string conversion
+                        expression = expression.substring(1, expression.length() - 1);
+
+                        // send to method toText
+                        expression = toText(nums);
+
+                        // update string array
+                        nums = expression.split(" ");
+
+                        System.out.println(expression);
+
+                    }
+                    Checkexp = expCheck(nums);
+                }
+
+            }
+            Checkmuldiv = muldivCheck(nums);
+            // while there is multipication or division in the expression
             while (Checkmuldiv != false) {
 
                 for (int j = 0; j < nums.length; j++) {
@@ -398,8 +461,8 @@ public class Final_Project implements Runnable, ActionListener {
         }
         return expression;
     }
+    // Main method to start our program
 
-// Main method to start our program
     public static void main(String[] args) {
         // Creates an instance of our program
         Final_Project gui = new Final_Project();
